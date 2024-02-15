@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingHeartRateBeltInformation: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingHeartRateBeltInformation: CharacteristicModel {
     let DataLength = 6
     
     /*
@@ -38,11 +38,6 @@ struct RowingHeartRateBeltInformation: CharacteristicModel, CustomDebugStringCon
         performanceMonitor.manufacturerID.value = manufacturerID
         performanceMonitor.deviceType.value = deviceType
         performanceMonitor.beltID.value = beltID
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingHeartRateBeltInformation]"
     }
 }
 

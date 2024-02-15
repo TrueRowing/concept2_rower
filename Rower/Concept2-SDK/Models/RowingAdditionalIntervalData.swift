@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingAdditionalIntervalData: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingAdditionalIntervalData: CharacteristicModel {
     let DataLength = 18
     
     /*
@@ -73,10 +73,5 @@ struct RowingAdditionalIntervalData: CharacteristicModel, CustomDebugStringConve
         performanceMonitor.intervalPower.value = intervalPower
         performanceMonitor.splitAverageDragFactor.value = splitAverageDragFactor
         performanceMonitor.intervalNumber.value = intervalNumber
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingAdditionalIntervalData]"
     }
 }

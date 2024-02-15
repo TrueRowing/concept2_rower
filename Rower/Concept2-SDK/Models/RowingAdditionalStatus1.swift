@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingAdditionalStatus1: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingAdditionalStatus1: CharacteristicModel {
   let DataLength = 16
   
   /*
@@ -62,10 +62,5 @@ struct RowingAdditionalStatus1: CharacteristicModel, CustomDebugStringConvertibl
     performanceMonitor.averagePace.value = averagePace
     performanceMonitor.restDistance.value = restDistance
     performanceMonitor.restTime.value = restTime
-  }
-  
-  // MARK: -
-  var debugDescription:String {
-      return "[RowingAdditionalStatus1]"
   }
 }

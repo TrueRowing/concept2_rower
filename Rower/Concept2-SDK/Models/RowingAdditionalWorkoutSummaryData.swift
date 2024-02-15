@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingAdditionalWorkoutSummaryData: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingAdditionalWorkoutSummaryData: CharacteristicModel {
     let DataLength = 20
     
     /*
@@ -71,10 +71,5 @@ struct RowingAdditionalWorkoutSummaryData: CharacteristicModel, CustomDebugStrin
         performanceMonitor.totalRestDistance.value = totalRestDistance
         performanceMonitor.intervalRestTime.value = intervalRestTime
         performanceMonitor.averageCalories.value = averageCalories
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingAdditionalWorkoutSummaryData]"
     }
 }

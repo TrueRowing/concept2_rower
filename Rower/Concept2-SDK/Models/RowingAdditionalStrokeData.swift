@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingAdditionalStrokeData: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingAdditionalStrokeData: CharacteristicModel {
     let DataLength = 15
     
     /*
@@ -57,11 +57,6 @@ struct RowingAdditionalStrokeData: CharacteristicModel, CustomDebugStringConvert
         performanceMonitor.strokeCount.value = strokeCount
         performanceMonitor.projectedWorkTime.value = projectedWorkTime
         performanceMonitor.projectedWorkDistance.value = projectedWorkDistance
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingAdditionalStrokeData]"
     }
 }
 

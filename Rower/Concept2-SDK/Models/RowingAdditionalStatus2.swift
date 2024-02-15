@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingAdditionalStatus2: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingAdditionalStatus2: CharacteristicModel {
     let DataLength = 18
     
     /*
@@ -64,10 +64,5 @@ struct RowingAdditionalStatus2: CharacteristicModel, CustomDebugStringConvertibl
         performanceMonitor.intervalAverageCalories.value = intervalAverageCalories
         performanceMonitor.lastSplitTime.value = lastSplitTime
         performanceMonitor.lastSplitDistance.value = lastSplitDistance
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingAdditionalStatus2]"
     }
 }

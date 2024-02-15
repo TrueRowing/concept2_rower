@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingWorkoutSummaryData: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingWorkoutSummaryData: CharacteristicModel {
     let DataLength = 20
     
     /*
@@ -81,10 +81,5 @@ struct RowingWorkoutSummaryData: CharacteristicModel, CustomDebugStringConvertib
         performanceMonitor.recoveryHeartRate.value = recoveryHeartRate
         performanceMonitor.workoutType.value = workoutType
         performanceMonitor.averagePace.value = averagePace
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingWorkoutSummaryData]"
     }
 }
