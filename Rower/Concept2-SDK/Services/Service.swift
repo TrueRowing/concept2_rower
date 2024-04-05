@@ -64,15 +64,16 @@ public enum Service {
                 RowingCharacteristic.GeneralStatus.UUID,
                 RowingCharacteristic.AdditionalStatus1.UUID,
                 RowingCharacteristic.AdditionalStatus2.UUID,
-                RowingCharacteristic.StatusSampleRate.UUID,
+//                RowingCharacteristic.StatusSampleRate.UUID,
                 RowingCharacteristic.StrokeData.UUID,
                 RowingCharacteristic.AdditionalStrokeData.UUID,
-                RowingCharacteristic.IntervalData.UUID,
-                RowingCharacteristic.AdditionalIntervalData.UUID,
-                RowingCharacteristic.WorkoutSummaryData.UUID,
-                RowingCharacteristic.AdditionalWorkoutSummaryData.UUID,
-                RowingCharacteristic.HeartRateBeltInformation.UUID,
-                RowingCharacteristic.MutliplexedInformation.UUID]
+//                RowingCharacteristic.IntervalData.UUID,
+//                RowingCharacteristic.AdditionalIntervalData.UUID,
+//                RowingCharacteristic.WorkoutSummaryData.UUID,
+//                RowingCharacteristic.AdditionalWorkoutSummaryData.UUID,
+//                RowingCharacteristic.HeartRateBeltInformation.UUID,
+//                RowingCharacteristic.MutliplexedInformation.UUID
+            ]
         default:
             return nil
         }

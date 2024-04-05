@@ -7,7 +7,7 @@
 //
 import CoreData
 
-struct RowingGeneralStatus: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingGeneralStatus: CharacteristicModel {
     let DataLength = 19
     
     /*
@@ -18,8 +18,8 @@ struct RowingGeneralStatus: CharacteristicModel, CustomDebugStringConvertible {
      Distance Lo (0.1 m lsb),
      Distance Mid,
      Distance High,
-     Workout Type 2(enum)      CSAFE_PM_GET_WORKOUTTYPE3
-     Interval Type4 (enum)     CSAFE_PM_GET_INTERVALTYPE
+     Workout Type (enum)      CSAFE_PM_GET_WORKOUTTYPE
+     Interval Type (enum)     CSAFE_PM_GET_INTERVALTYPE
      Workout State (enum)      CSAFE_PM_GET_WORKOUTSTATE
      Rowing State (enum)       CSAFE_PM_GET_ROWINGSTATE
      Stroke State (enum)       CSAFE_PM_GET_STROKESTATE
@@ -75,21 +75,5 @@ struct RowingGeneralStatus: CharacteristicModel, CustomDebugStringConvertible {
         performanceMonitor.workoutDuration.value = workoutDuration
         performanceMonitor.workoutDurationType.value = workoutDurationType
         performanceMonitor.dragFactor.value = dragFactor
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingGeneralStatus]"
-            + "\telapsed time: \(elapsedTime)"
-            + "\tdistance: \(distance)"
-            + "\tworkoutType: \(workoutType as Optional)"
-            + "\tintervalType: \(intervalType as Optional)"
-            + "\tworkoutState: \(workoutState as Optional)"
-            + "\trowingState: \(rowingState as Optional)"
-            + "\tstrokeState: \(strokeState as Optional)"
-            + "\ttotalWorkDistance: \(totalWorkDistance)"
-            + "\tworkoutDuration: \(workoutDuration)"
-            + "\tworkoutDurationType: \(workoutDurationType as Optional)"
-            + "\tdragFactor: \(dragFactor)"
     }
 }

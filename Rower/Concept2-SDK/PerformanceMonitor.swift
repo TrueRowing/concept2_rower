@@ -29,6 +29,7 @@ public final class PerformanceMonitor
     public let averageDriveForce = Subject<C2DriveForce>(value: 0)
     public let averageHeartRate = Subject<C2HeartRate>(value: 0)
     public let averagePace = Subject<C2Pace>(value: 0)
+    public let averagePower = Subject<C2Power>(value: 0)
     public let averageStrokeRate = Subject<C2StrokeRate>(value: 0)
     public let currentPace = Subject<C2Pace>(value: 0)
     public let distance = Subject<C2Distance>(value: 0)
@@ -105,6 +106,7 @@ public final class PerformanceMonitor
         averageCalories.value = 0
         averageDriveForce.value = 0
         averagePace.value = 0
+        averagePower.value = 0
         currentPace.value = 0
         distance.value = 0
         dragFactor.value = 0
