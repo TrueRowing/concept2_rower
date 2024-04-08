@@ -6,7 +6,7 @@
 //  Edited by Paul Aschmann on 08/06/2020
 //
 import CoreData
-struct RowingStatusSampleRate: CharacteristicModel, CustomDebugStringConvertible {
+struct RowingStatusSampleRate: CharacteristicModel {
     let DataLength = 1
     
     /*
@@ -25,11 +25,6 @@ struct RowingStatusSampleRate: CharacteristicModel, CustomDebugStringConvertible
     // MARK: PerformanceMonitor
     func updatePerformanceMonitor(performanceMonitor:PerformanceMonitor) {
         performanceMonitor.sampleRate.value = sampleRate
-    }
-    
-    // MARK: -
-    var debugDescription:String {
-        return "[RowingStatusSampleRate]\n\tsampleRate: \(sampleRate as Optional)"
     }
 }
 
