@@ -9,18 +9,51 @@
 
 import CoreBluetooth
 import CoreData
+import Logging
+
+public enum PerformanceMonitorState {
+    case disconnected
+    case connecting
+    case connected
+    case disconnecting
+}
+
+extension CBPeripheralState {
+    var performanceMonitorState: PerformanceMonitorState {
+        switch self {
+        case .disconnected:
+            return PerformanceMonitorState.disconnected
+        case .connecting:
+            return PerformanceMonitorState.connecting
+        case .connected:
+            return PerformanceMonitorState.connected
+        case .disconnecting:
+            return PerformanceMonitorState.disconnecting
+        @unknown default:
+            return PerformanceMonitorState.disconnected
+        }
+    }
+}
+
 
 public final class PerformanceMonitor
 {
+    let logger = Logger(label: "concept2.PerformanceMonitor")
+
     public static let DidUpdateStateNotification = "PerformanceMonitorDidUpdateStateNotification"
     
     //
     var peripheral:CBPeripheral
     lazy var peripheralDelegate = PeripheralDelegate()
     
+    /// Last error received during connect/disconnect or discovery
+    var lastError: Error?
+    
     // MARK: Basic Information
     public var peripheralName:String { get { return peripheral.name ?? "Unknown" } }
     public var peripheralIdentifier:String { get { return peripheral.identifier.uuidString } }
+    
+    public var state: PerformanceMonitorState { get { return peripheral.state.performanceMonitorState }}
     
     public var isConnected:Bool { get { return (peripheral.state == .connected) } }
     
@@ -159,21 +192,25 @@ public final class PerformanceMonitor
     
     // MARK: -
     func updatePeripheralObservers() {
-        print("[PerformanceMonitor]updatePeripheralObservers")
+        logger.debug("updatePeripheralObservers")
         
         peripheral.services?.forEach({ (service:CBService) -> () in
-            print("Requesting notifications for \(service.description)")
+            logger.debug("Requesting notifications for \(service.description)")
             
             if let svc = Service(uuid: service.uuid) {
                 peripheral.discoverCharacteristics(svc.characteristicUUIDs,
                                                    for:  service)
                 
                 service.characteristics?.forEach({ (characteristic:CBCharacteristic) -> () in
-                    print("\t* \(characteristic)")
+                    logger.debug("\t* \(characteristic)")
                     peripheral.setNotifyValue(true, for: characteristic)
                 })
             }
         })
+    }
+    
+    func sendUpdateStateNotification() {
+        NotificationCenter.default.post( name: NSNotification.Name(rawValue: PerformanceMonitor.DidUpdateStateNotification), object: self)
     }
 }
 

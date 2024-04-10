@@ -7,14 +7,21 @@
 //
 
 import UIKit
+import Logging
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    public static func ourLogHandler(label: String) -> StreamLogHandler {
+        var handler = StreamLogHandler.standardError(label: label)
+        handler.logLevel = .debug
+        return handler
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        LoggingSystem.bootstrap(AppDelegate.ourLogHandler)
         return true
     }
 
