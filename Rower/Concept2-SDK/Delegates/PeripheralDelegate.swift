@@ -8,15 +8,18 @@
 //
 
 import CoreBluetooth
+import Logging
 
 final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
+    let logger = Logger(label: "concept2.PeripheralDelegate")
+
     weak var performanceMonitor:PerformanceMonitor?
     
     // MARK: Services
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("[PerformanceMonitor]didDiscoverServices:")
+        logger.debug("didDiscoverServices:")
         peripheral.services?.forEach({ (service:CBService) -> () in
-            print("\t* \(service.description)")
+            logger.debug("\t* \(service.description)")
             
             if let svc = Service(uuid: service.uuid) {
                 peripheral.discoverCharacteristics(svc.characteristicUUIDs,
@@ -26,33 +29,40 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: Error?) {
-        print("[PerformanceMonitor]didDiscoverIncludedServicesForService")
+        logger.debug("didDiscoverIncludedServicesForService")
     }
     
     func peripheral(_ peripheral: CBPeripheral,
                     didModifyServices
         invalidatedServices: [CBService]) {
-        print("[PerformanceMonitor]didModifyServices")
+        logger.debug("didModifyServices")
     }
     
     // MARK: Characteristics
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("[PerformanceMonitor]didDiscoverCharacteristicsForService")
+        logger.debug("didDiscoverCharacteristicsForService \(service) \(error?.localizedDescription ?? "")")
         service.characteristics?.forEach({ (characteristic:CBCharacteristic) -> () in
-            peripheral.setNotifyValue(true, for: characteristic)
+            if characteristic.properties.contains(.notify), !characteristic.isNotifying {
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
         })
+        
+        if let error, let pm = PerformanceMonitorStore.sharedInstance.performanceMonitorWithPeripheral(peripheral: peripheral) {
+            pm.lastError = error
+            pm.sendUpdateStateNotification()
+        }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
-        print("[PerformanceMonitor]didDiscoverDescriptorsForCharacteristic")
+        logger.debug("didDiscoverDescriptorsForCharacteristic \(characteristic) \(error?.localizedDescription ?? "")")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("[PerformanceMonitor]didUpdateValueForCharacteristic: \(characteristic)")
-        if let svc = Service(uuid: characteristic.service!.uuid) {
+        logger.debug("didUpdateValueForCharacteristic: \(characteristic) \(error?.localizedDescription ?? "")")
+        if let serviceUuid = characteristic.service?.uuid,  let svc = Service(uuid: characteristic.service!.uuid) {
             if let c = svc.characteristic(uuid: characteristic.uuid) {
                 if let cm = c.parse(data: characteristic.value as NSData?) {
-                    print(cm)
+                    logger.debug("\(String(describing: cm))")
                     if let pm = performanceMonitor {
                         cm.updatePerformanceMonitor(performanceMonitor: pm)
                     }
@@ -62,29 +72,32 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
-        print("[PerformanceMonitor]didUpdateValueForDescriptor")
+        logger.debug("didUpdateValueForDescriptor")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("[PerformanceMonitor]didWriteValueForCharacteristic")
+        logger.debug("didWriteValueForCharacteristic")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
-        print("[PerformanceMonitor]didWriteValueForDescriptor")
+        logger.debug("didWriteValueForDescriptor")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        print("[PerformanceMonitor]didUpdateNotificationStateForCharacteristic")
+        logger.debug("didUpdateNotificationStateForCharacteristic")
     }
-    
     
     // MARK: Signal Strength
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-        print("[PerformanceMonitor]didUpdateRSSI")
+        logger.debug("didUpdateRSSI")
     }
     
     // MARK: Name
     func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
-        print("[PerformanceMonitor]didUpdateName")
+        logger.debug("didUpdateName")
+        
+        if let pm = PerformanceMonitorStore.sharedInstance.performanceMonitorWithPeripheral(peripheral: peripheral) {
+            pm.sendUpdateStateNotification()
+        }
     }
 }

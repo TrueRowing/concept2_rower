@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -60,6 +60,9 @@
 		2303236824FEBA1E00F60ABB /* PerformanceMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303233824FEBA1E00F60ABB /* PerformanceMonitorViewController.swift */; };
 		2303236924FEBA1E00F60ABB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2303233924FEBA1E00F60ABB /* Main.storyboard */; };
 		2336833724FFE6F500A92917 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2336833624FFE6F500A92917 /* ViewController.swift */; };
+		FCC6D5172BC49DB000C110E3 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FCC6D5162BC49DB000C110E3 /* Logging */; };
+		FCC6D51A2BC49E2600C110E3 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FCC6D5192BC49E2600C110E3 /* Logging */; };
+		FCC6D51C2BC49E2F00C110E3 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FCC6D51B2BC49E2F00C110E3 /* Logging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCC6D5172BC49DB000C110E3 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCC6D51A2BC49E2600C110E3 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCC6D51C2BC49E2F00C110E3 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +179,7 @@
 				230322EA24FEB56A00F60ABB /* RowerTests */,
 				230322F524FEB56A00F60ABB /* RowerUITests */,
 				230322D224FEB56800F60ABB /* Products */,
+				FCC6D5182BC49E2600C110E3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -319,6 +326,13 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		FCC6D5182BC49E2600C110E3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -335,6 +349,9 @@
 			dependencies = (
 			);
 			name = Rower;
+			packageProductDependencies = (
+				FCC6D5162BC49DB000C110E3 /* Logging */,
+			);
 			productName = Temp;
 			productReference = 230322D124FEB56800F60ABB /* Rower.app */;
 			productType = "com.apple.product-type.application";
@@ -353,6 +370,9 @@
 				230322E924FEB56A00F60ABB /* PBXTargetDependency */,
 			);
 			name = RowerTests;
+			packageProductDependencies = (
+				FCC6D5192BC49E2600C110E3 /* Logging */,
+			);
 			productName = TempTests;
 			productReference = 230322E724FEB56A00F60ABB /* RowerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -371,6 +391,9 @@
 				230322F424FEB56A00F60ABB /* PBXTargetDependency */,
 			);
 			name = RowerUITests;
+			packageProductDependencies = (
+				FCC6D51B2BC49E2F00C110E3 /* Logging */,
+			);
 			productName = TempUITests;
 			productReference = 230322F224FEB56A00F60ABB /* RowerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -407,6 +430,9 @@
 				Base,
 			);
 			mainGroup = 230322C824FEB56800F60ABB;
+			packageReferences = (
+				FCC6D5152BC49DB000C110E3 /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
 			productRefGroup = 230322D224FEB56800F60ABB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -820,6 +846,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FCC6D5152BC49DB000C110E3 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FCC6D5162BC49DB000C110E3 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCC6D5152BC49DB000C110E3 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+		FCC6D5192BC49E2600C110E3 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCC6D5152BC49DB000C110E3 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+		FCC6D51B2BC49E2F00C110E3 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCC6D5152BC49DB000C110E3 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 230322C924FEB56800F60ABB /* Project object */;
 }

@@ -8,8 +8,11 @@
 
 import Foundation
 import UIKit
+import Logging
 
 class ViewController: UIViewController {
+    let logger = Logger(label: "concept2.ViewController")
+
     var isReadyDisposable:Disposable?
     var performanceMonitorsDisposable:Disposable?
     
@@ -91,12 +94,12 @@ class ViewController: UIViewController {
     
     
     func performanceMonitorStateDidUpdate(performanceMonitor:PerformanceMonitor) {
-        print("PerformanceMonitorStateDidUpdate: \(performanceMonitor.peripheralName)")
+        logger.debug("\(performanceMonitor.peripheralName)")
         
         tableView.reloadData()
         
         if performanceMonitor.isConnected {
-            print("\tConnected - Enabling services")
+            logger.debug("\tConnected - Enabling services")
             self.performSegue(withIdentifier: "PresentPerformanceMonitor", sender: performanceMonitor)
         }
     }

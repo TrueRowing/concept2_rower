@@ -9,32 +9,36 @@
 
 import Foundation
 import CoreBluetooth
+import Logging
 
 final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
+    
+    let logger = Logger(label: "concept2.CentralManagerDelegate")
+    
     // MARK: Central Manager Status
     func centralManagerDidUpdateState(_ central: CBCentralManager)
     {
         switch central.state {
         case .unknown:
-            print("[BluetoothManager]state: unknown")
+            logger.debug("state: unknown")
             break
         case .resetting:
-            print("[BluetoothManager]state: resetting")
+            logger.debug("state: resetting")
             break
         case .unsupported:
-            print("[BluetoothManager]state: not available")
+            logger.debug("state: not available")
             break
         case .unauthorized:
-            print("[BluetoothManager]state: not authorized")
+            logger.debug("state: not authorized")
             break
         case .poweredOff:
-            print("[BluetoothManager]state: powered off")
+            logger.debug("state: powered off")
             break
         case .poweredOn:
-            print("[BluetoothManager]state: powered on")
+            logger.debug("state: powered on")
             break
         @unknown default:
-            print("[BluetoothManager]state: unknown")
+            logger.debug("state: unknown")
         }
         
         BluetoothManager.isReady.value = (central.state == .poweredOn)
@@ -43,10 +47,17 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
     // MARK: Peripheral Discovery
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("[BluetoothManager]didDiscoverPeripheral \(peripheral)")
-        PerformanceMonitorStore.sharedInstance.addPerformanceMonitor(
-            performanceMonitor: PerformanceMonitor(withPeripheral: peripheral)
-        )
+        logger.debug("didDiscoverPeripheral \(peripheral) adv: \(advertisementData)")
+        
+        if let pm = PerformanceMonitorStore.sharedInstance.performanceMonitorWithPeripheral(peripheral: peripheral) {
+            pm.sendUpdateStateNotification()
+
+        } else {
+            PerformanceMonitorStore.sharedInstance.addPerformanceMonitor(
+                performanceMonitor: PerformanceMonitor(withPeripheral: peripheral)
+            )
+        }
+        
     }
     
     // MARK: Peripheral Connections
@@ -54,33 +65,35 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
                         didConnect
         peripheral: CBPeripheral)
     {
-        print("[BluetoothManager]didConnectPeripheral")
+        logger.debug("didConnectPeripheral \(peripheral)")
         peripheral.discoverServices([
             Service.DeviceDiscovery.UUID,
             Service.DeviceInformation.UUID,
             Service.Control.UUID,
             Service.Rowing.UUID])
-        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral)
+
+        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: nil)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("[BluetoothManager]didFailToConnectPeripheral")
-        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral)
+        logger.debug("didFailToConnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
+        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: error)
     }
     
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("[BluetoothManager]didDisconnectPeripheral")
-        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral)
+        logger.debug("didDisconnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
+        postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: error)
     }
     
     // MARK: -
     
-    private func postPerformanceMonitorNotificationForPeripheral(peripheral:CBPeripheral) {
+    private func postPerformanceMonitorNotificationForPeripheral(peripheral:CBPeripheral, lastError: Error?) {
         let performanceMonitorStore = PerformanceMonitorStore.sharedInstance
         if let pm = performanceMonitorStore.performanceMonitorWithPeripheral(peripheral: peripheral) {
-            pm.updatePeripheralObservers()
-            NotificationCenter.default.post( name: NSNotification.Name(rawValue: PerformanceMonitor.DidUpdateStateNotification), object: pm)
+            pm.lastError = lastError
+//            pm.updatePeripheralObservers()
+            pm.sendUpdateStateNotification()
         }
     }
 }
