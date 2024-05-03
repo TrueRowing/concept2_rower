@@ -20,25 +20,25 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
     {
         switch central.state {
         case .unknown:
-            logger.debug("state: unknown")
+            logger.info("state: unknown")
             break
         case .resetting:
-            logger.debug("state: resetting")
+            logger.info("state: resetting")
             break
         case .unsupported:
-            logger.debug("state: not available")
+            logger.info("state: not available")
             break
         case .unauthorized:
-            logger.debug("state: not authorized")
+            logger.info("state: not authorized")
             break
         case .poweredOff:
-            logger.debug("state: powered off")
+            logger.info("state: powered off")
             break
         case .poweredOn:
-            logger.debug("state: powered on")
+            logger.info("state: powered on")
             break
         @unknown default:
-            logger.debug("state: unknown")
+            logger.info("state: unknown")
         }
         
         BluetoothManager.isReady.value = (central.state == .poweredOn)
@@ -65,7 +65,7 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
                         didConnect
         peripheral: CBPeripheral)
     {
-        logger.debug("didConnectPeripheral \(peripheral)")
+        logger.info("didConnectPeripheral \(peripheral)")
         peripheral.discoverServices([
             Service.DeviceDiscovery.UUID,
             Service.DeviceInformation.UUID,
@@ -76,13 +76,13 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        logger.debug("didFailToConnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
+        logger.info("didFailToConnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
         postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: error)
     }
     
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        logger.debug("didDisconnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
+        logger.info("didDisconnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
         postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: error)
     }
     

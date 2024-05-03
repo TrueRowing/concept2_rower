@@ -17,9 +17,9 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     
     // MARK: Services
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        logger.debug("didDiscoverServices:")
+        logger.info("didDiscoverServices:")
         peripheral.services?.forEach({ (service:CBService) -> () in
-            logger.debug("\t* \(service.description)")
+            logger.info("\t* \(service.description)")
             
             if let svc = Service(uuid: service.uuid) {
                 peripheral.discoverCharacteristics(svc.characteristicUUIDs,
@@ -40,7 +40,7 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     
     // MARK: Characteristics
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        logger.debug("didDiscoverCharacteristicsForService \(service) \(error?.localizedDescription ?? "")")
+        logger.info("didDiscoverCharacteristicsForService \(service) \(error?.localizedDescription ?? "")")
         service.characteristics?.forEach({ (characteristic:CBCharacteristic) -> () in
             if characteristic.properties.contains(.notify), !characteristic.isNotifying {
                 peripheral.setNotifyValue(true, for: characteristic)
