@@ -78,8 +78,7 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         logger.info("didFailToConnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
         postPerformanceMonitorNotificationForPeripheral(peripheral: peripheral, lastError: error)
-    }
-    
+    }    
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         logger.info("didDisconnectPeripheral \(peripheral) \(error?.localizedDescription ?? "")")
