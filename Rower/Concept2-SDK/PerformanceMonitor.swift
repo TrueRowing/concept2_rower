@@ -43,11 +43,13 @@ public final class PerformanceMonitor
     public static let DidUpdateStateNotification = "PerformanceMonitorDidUpdateStateNotification"
     
     //
-    var peripheral:CBPeripheral
+    public var peripheral:CBPeripheral
     lazy var peripheralDelegate = PeripheralDelegate()
     
     /// Last error received during connect/disconnect or discovery
-    var lastError: Error?
+    public var lastError: Error?
+    
+    public var lastDiscovered = Date()
     
     // MARK: Basic Information
     public var peripheralName:String { get { return peripheral.name ?? "Unknown" } }

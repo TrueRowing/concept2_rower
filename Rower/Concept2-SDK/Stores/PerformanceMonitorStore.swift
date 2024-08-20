@@ -13,37 +13,57 @@ let PerformanceMonitorStoreDidAddItemNotification = "PerformanceMonitorStoreDidA
 let PerformanceMonitorStoreDidRemoveItemNotification = "PerformanceMonitorStoreDidRemoveItemNotification"
 
 final class PerformanceMonitorStore {
-  // Singleton
-  static let sharedInstance = PerformanceMonitorStore()
-  
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  var performanceMonitors = Set<PerformanceMonitor>()
-
-  func addPerformanceMonitor(performanceMonitor:PerformanceMonitor) {
-    performanceMonitors.insert(performanceMonitor)
+    // Singleton
+    static let sharedInstance = PerformanceMonitorStore()
     
-    NotificationCenter.default.post(
-        name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidAddItemNotification),
-      object: self)
-  }
-  
-  func performanceMonitorWithPeripheral(peripheral:CBPeripheral) -> PerformanceMonitor? {
-    var pm:PerformanceMonitor?
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    var performanceMonitors = Set<PerformanceMonitor>()
     
-    performanceMonitors.forEach { (performanceMonitor:PerformanceMonitor) -> () in
-      if performanceMonitor.peripheral == peripheral {
-        pm = performanceMonitor
-      }
+    func addPerformanceMonitor(performanceMonitor:PerformanceMonitor) {
+        performanceMonitors.insert(performanceMonitor)
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidAddItemNotification),
+            object: self)
     }
     
-    return pm
-  }
-  
-  func removePerformanceMonitor(performanceMonitor:PerformanceMonitor) {
-    performanceMonitors.remove(performanceMonitor)
+    func performanceMonitorWithPeripheral(peripheral:CBPeripheral) -> PerformanceMonitor? {
+        var pm:PerformanceMonitor?
+        
+        performanceMonitors.forEach { (performanceMonitor:PerformanceMonitor) -> () in
+            if performanceMonitor.peripheral == peripheral {
+                pm = performanceMonitor
+            }
+        }
+        
+        return pm
+    }
     
-    NotificationCenter.default.post(
-        name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidRemoveItemNotification),
-      object: self)
-  }
+    func removePerformanceMonitor(performanceMonitor:PerformanceMonitor) {
+        performanceMonitors.remove(performanceMonitor)
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidRemoveItemNotification),
+            object: self)
+    }
+    
+    func removeOlderThan(time: TimeInterval) {
+        guard performanceMonitors.count > 0 else { return }
+        let updated = performanceMonitors.filter( { $0.lastDiscovered.timeIntervalSinceNow > -time })
+        if updated.count != performanceMonitors.count {
+            performanceMonitors = updated
+            NotificationCenter.default.post(
+                name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidRemoveItemNotification),
+                object: self)
+        }
+    }
+    
+    func removeAll() {
+        performanceMonitors.removeAll()
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: PerformanceMonitorStoreDidRemoveItemNotification),
+            object: self)
+    }
+    
 }

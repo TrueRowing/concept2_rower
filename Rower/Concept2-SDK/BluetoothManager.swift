@@ -54,7 +54,7 @@ public final class BluetoothManager
     private var centralManager:CBCentralManager
     private var centralManagerDelegate:CentralManagerDelegate
     private let centralManagerQueue = DispatchQueue(label: "com.boutfitness.concept2.bluetooth.central", attributes: .concurrent)
-    
+    private var timer:Timer?
     
     // MARK: Initialization
     init() {
@@ -77,16 +77,36 @@ public final class BluetoothManager
                     }
                 }
         }
+        
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name(rawValue: PerformanceMonitorStoreDidRemoveItemNotification),
+            object: PerformanceMonitorStore.sharedInstance,
+            queue: nil) { [weak self] (notification) -> Void in
+                if let weakSelf = self {
+                    DispatchQueue.global(qos: .background).async {
+                        DispatchQueue.main.async {
+                            weakSelf.performanceMonitors.value = Array(PerformanceMonitorStore.sharedInstance.performanceMonitors)
+                        }
+                    }
+                }
+        }
     }
-    
+
     func scanForPerformanceMonitors() {
-        centralManager.scanForPeripherals(withServices: [Service.DeviceDiscovery.UUID], options: nil)
+        timer =  Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { [weak self](_) in
+            PerformanceMonitorStore.sharedInstance.removeOlderThan(time: 2)
+        }
+        
+        PerformanceMonitorStore.sharedInstance.removeAll()
+        centralManager.scanForPeripherals(withServices: [Service.DeviceDiscovery.UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         //MARK: Using the below method will find all bluetooth devices :)
         //centralManager.scanForPeripherals(withServices: nil)
     }
     
     func stopScanningForPerformanceMonitors() {
         centralManager.stopScan()
+        timer?.invalidate()
+        timer = nil
     }
     
     func connectPerformanceMonitor(performanceMonitor:PerformanceMonitor, exclusive:Bool) {
@@ -103,6 +123,7 @@ public final class BluetoothManager
         }
         
         centralManager.connect(performanceMonitor.peripheral)
+        performanceMonitor.sendUpdateStateNotification()
     }
     
     func connectPerformanceMonitor(performanceMonitor:PerformanceMonitor) {
