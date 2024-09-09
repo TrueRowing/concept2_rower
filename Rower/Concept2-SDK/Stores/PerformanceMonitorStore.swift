@@ -49,7 +49,9 @@ final class PerformanceMonitorStore {
     
     func removeOlderThan(time: TimeInterval) {
         guard performanceMonitors.count > 0 else { return }
-        let updated = performanceMonitors.filter( { $0.lastDiscovered.timeIntervalSinceNow > -time })
+        let updated = performanceMonitors.filter( {
+            $0.lastDiscovered.timeIntervalSinceNow > -time || $0.peripheral.state != .disconnected
+        })
         if updated.count != performanceMonitors.count {
             performanceMonitors = updated
             NotificationCenter.default.post(

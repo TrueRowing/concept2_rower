@@ -50,6 +50,7 @@ final class CentralManagerDelegate:NSObject, CBCentralManagerDelegate {
         logger.debug("didDiscoverPeripheral \(peripheral) adv: \(advertisementData)")
         
         if let pm = PerformanceMonitorStore.sharedInstance.performanceMonitorWithPeripheral(peripheral: peripheral) {
+            pm.lastDiscovered = Date()
             pm.sendUpdateStateNotification()
 
         } else {
