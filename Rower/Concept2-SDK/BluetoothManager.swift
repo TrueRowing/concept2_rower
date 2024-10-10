@@ -12,6 +12,8 @@ import Foundation
 
 public final class BluetoothManager
 {
+    public static let DISCOVER_TIME_SECONDS: TimeInterval = 2.0
+    
     public static let sharedInstance = BluetoothManager()
     
     public static func scanForPerformanceMonitors() {
@@ -94,10 +96,10 @@ public final class BluetoothManager
 
     func scanForPerformanceMonitors() {
         timer =  Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { [weak self](_) in
-            PerformanceMonitorStore.sharedInstance.removeOlderThan(time: 2)
+            PerformanceMonitorStore.sharedInstance.removeOlderThan(time: BluetoothManager.DISCOVER_TIME_SECONDS)
         }
         
-        PerformanceMonitorStore.sharedInstance.removeAll()
+        PerformanceMonitorStore.sharedInstance.removeOlderThan(time: BluetoothManager.DISCOVER_TIME_SECONDS)
         centralManager.scanForPeripherals(withServices: [Service.DeviceDiscovery.UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         //MARK: Using the below method will find all bluetooth devices :)
         //centralManager.scanForPeripherals(withServices: nil)
